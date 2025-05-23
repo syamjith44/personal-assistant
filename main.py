@@ -11,5 +11,8 @@ async def root():
 
 @app.post("/chat/")
 async def chat(chat_input: ChatInput):
-    chat = LlamaChat(chat_input=chat_input.input)
+    chat = LlamaChat(
+        chat_input=chat_input.input,
+        exit=chat_input.exit
+    )
     return {"bot": chat.response}

@@ -10,6 +10,8 @@ class LlamaChat:
         self.response = ""
         self.chat_input = chat_input
         self.prompt_llma()
+        if exit is True:
+            self.clear_context()
 
     def get_model(self):
         return Llama(
@@ -35,3 +37,7 @@ class LlamaChat:
         )
         self.response = response["choices"][0]["text"].strip()
         self.update_context(f"{self.ASSISTANT_PREFIX} {self.response}")
+
+    def clear_context(self):
+        with open(self.PROMPT_FILE, 'w') as file:
+            file.write("")
