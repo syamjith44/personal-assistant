@@ -106,3 +106,9 @@ venv.bak/
 .mypy_cache/
 
 .idea/*
+
+# ai models
+models/
+
+# temporary files
+tmp/
