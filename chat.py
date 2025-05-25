@@ -55,3 +55,4 @@ while True:
         console.print("[red]Error communicating with server.[/red]")
     
     console.print()  # Add spacing between exchanges
+    
