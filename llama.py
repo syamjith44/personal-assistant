@@ -41,9 +41,7 @@ class LlamaChat:
             max_tokens=100,
             stop=["###"]
         )
-        print(f"prompt: {self.BASE_PROMPT}{_prompt}\n{self.ASSISTANT_PREFIX}")
         self.response = response["choices"][0]["text"].strip()
-        print(f"response: {response}")
         self.update_context(f"{self.ASSISTANT_PREFIX} {self.response}")
 
     def clear_context(self):

@@ -1,21 +1,57 @@
-import requests
+from rich import box
 from rich.console import Console
-from rich.prompt import Prompt
+from rich.panel import Panel
+from rich.text import Text
+from rich.align import Align
+import requests
+import sys
+import os
 
 API_URL = "http://localhost:8000/chat/"
 console = Console()
+terminal_width = console.size.width
 
-console.print("[bold green]Terminal Chat[/bold green] — type 'exit' to quit")
+def get_hidden_input():
+    """Get input and attempt to hide the echo"""
+    console.print("[bold cyan]You:[/bold cyan] ", end="")
+    user_input = input()
+    
+    # Try to clear the input line (works on most modern terminals)
+    try:
+        # Move cursor up and clear line
+        print("\033[A\033[2K", end="")  # ANSI: up one line, clear entire line
+        
+        # Reprint just our styled prompt with the input
+        text = Text(f"You: {user_input}", style="bold cyan")
+        panel = Panel(text, border_style="cyan", title="You", title_align="left", box=box.ROUNDED)
+        console.print(panel)
+        
+    except:
+        # Fallback: just add some visual separation
+        console.print()
+    
+    return user_input
+
+def styled_bot_msg(msg: str):
+    text = Text(msg, style="bold magenta")
+    panel = Panel(text, border_style="magenta", title="AI", title_align="right", box=box.ROUNDED)
+    aligned = Align.right(panel, width=terminal_width)
+    console.print(aligned)
+
+console.print("[bold green]🤖 Terminal Chat[/bold green] — type 'exit' to quit")
+console.print()
 
 while True:
-    user_input = Prompt.ask("[bold blue]You[/bold blue]")
+    user_input = get_hidden_input()
+
     if user_input.lower() == "exit":
         requests.post(API_URL, json={"input": user_input, "exit": True})
         break
 
     response = requests.post(API_URL, json={"input": user_input, "exit": False})
     if response.status_code == 200:
-        reply = response.json()["bot"]
-        console.print(f"[bold magenta]AI:[/bold magenta] {reply}")
+        styled_bot_msg(response.json()["bot"])
     else:
         console.print("[red]Error communicating with server.[/red]")
+    
+    console.print()  # Add spacing between exchanges
