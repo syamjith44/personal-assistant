@@ -5,6 +5,10 @@ class LlamaChat:
     USER_PREFIX = "### Human:"
     ASSISTANT_PREFIX = "### Assistant:"
     PROMPT_FILE = "tmp/prompt.txt"
+    BASE_PROMPT = """
+    ### System: You are TinyLLaMA, a helpful, concise, and friendly AI assistant.
+    ### Respond clearly and conversationally.
+    """
 
     def __init__(self, chat_input, exit=False):
         self.response = ""
@@ -26,16 +30,20 @@ class LlamaChat:
     def get_prompt(self):
         prompt = f"{self.USER_PREFIX} {self.chat_input}"
         self.update_context(prompt)
-        return prompt
+        with open(self.PROMPT_FILE, 'r') as file:
+            return file.read()
     
     def prompt_llma(self):
         llm = self.get_model()
+        _prompt = self.get_prompt()
         response = llm(
-            self.get_prompt(), 
+            f"{self.BASE_PROMPT}\n{_prompt}\n{self.ASSISTANT_PREFIX}", 
             max_tokens=100,
             stop=["###"]
         )
+        print(f"prompt: {self.BASE_PROMPT}{_prompt}\n{self.ASSISTANT_PREFIX}")
         self.response = response["choices"][0]["text"].strip()
+        print(f"response: {response}")
         self.update_context(f"{self.ASSISTANT_PREFIX} {self.response}")
 
     def clear_context(self):
