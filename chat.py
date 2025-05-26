@@ -52,12 +52,12 @@ while True:
             exit=True
         )
         break
-    try:
-        chat = LlamaChat(chat_input=user_input)
-    except:
-        console.print("[red]Error communicating with model.[/red]")
-    else:
-        styled_bot_msg(chat.response)
+    # try:
+    chat = LlamaChat(chat_input=user_input)
+    # except:
+    #     console.print("[red]Error communicating with model.[/red]")
+    # else:
+    styled_bot_msg(chat.response)
         
     
     console.print()  # Add spacing between exchanges

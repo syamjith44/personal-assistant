@@ -1,10 +1,12 @@
 from llama_cpp import Llama
 
+from constants import MODEL_PATH, PROMPT_PATH
+
 
 class LlamaChat:
     USER_PREFIX = "### Human:"
     ASSISTANT_PREFIX = "### Assistant:"
-    PROMPT_FILE = "tmp/prompt.txt"
+    PROMPT_FILE = PROMPT_PATH
     BASE_PROMPT = """
     ### System: You are TinyLLaMA, a helpful, concise, and friendly AI assistant.
     ### Respond clearly and conversationally.
@@ -19,7 +21,7 @@ class LlamaChat:
 
     def get_model(self):
         return Llama(
-            model_path="models/tinyllama.gguf",
+            model_path=MODEL_PATH,
             n_ctx=2048, verbose=False
         )
     
