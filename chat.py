@@ -7,6 +7,8 @@ import requests
 import sys
 import os
 
+from llama import LlamaChat
+
 API_URL = "http://localhost:8000/chat/"
 console = Console()
 terminal_width = console.size.width
@@ -45,14 +47,18 @@ while True:
     user_input = get_hidden_input()
 
     if user_input.lower() == "exit":
-        requests.post(API_URL, json={"input": user_input, "exit": True})
+        chat = LlamaChat(
+            chat_input=user_input,
+            exit=True
+        )
         break
-
-    response = requests.post(API_URL, json={"input": user_input, "exit": False})
-    if response.status_code == 200:
-        styled_bot_msg(response.json()["bot"])
+    try:
+        chat = LlamaChat(chat_input=user_input)
+    except:
+        console.print("[red]Error communicating with model.[/red]")
     else:
-        console.print("[red]Error communicating with server.[/red]")
+        styled_bot_msg(chat.response)
+        
     
     console.print()  # Add spacing between exchanges
     

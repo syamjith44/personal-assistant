@@ -20,7 +20,7 @@ class LlamaChat:
     def get_model(self):
         return Llama(
             model_path="models/tinyllama.gguf",
-            n_ctx=512
+            n_ctx=2048, verbose=False
         )
     
     def update_context(self, prompt):
@@ -38,7 +38,7 @@ class LlamaChat:
         _prompt = self.get_prompt()
         response = llm(
             f"{self.BASE_PROMPT}\n{_prompt}\n{self.ASSISTANT_PREFIX}", 
-            max_tokens=100,
+            max_tokens=1000,
             stop=["###"]
         )
         self.response = response["choices"][0]["text"].strip()
