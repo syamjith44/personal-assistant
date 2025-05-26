@@ -24,9 +24,10 @@ def get_hidden_input():
         print("\033[A\033[2K", end="")  # ANSI: up one line, clear entire line
         
         # Reprint just our styled prompt with the input
-        text = Text(f"You: {user_input}", style="bold cyan")
+        text = Text(f"{user_input}", style="bold cyan")
         panel = Panel(text, border_style="cyan", title="You", title_align="left", box=box.ROUNDED)
-        console.print(panel)
+        aligned = Align.left(panel, width=terminal_width)
+        console.print(aligned)
         
     except:
         # Fallback: just add some visual separation

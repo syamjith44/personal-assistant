@@ -1,16 +1,13 @@
 from llama_cpp import Llama
 
-from constants import MODEL_PATH, PROMPT_PATH
+from constants import MODEL_PATH, PROMPT_PATH, SYSTEM_PROMPT_PATH
 
 
 class LlamaChat:
     USER_PREFIX = "### Human:"
     ASSISTANT_PREFIX = "### Assistant:"
     PROMPT_FILE = PROMPT_PATH
-    BASE_PROMPT = """
-    ### System: You are TinyLLaMA, a helpful, concise, and friendly AI assistant.
-    ### Respond clearly and conversationally.
-    """
+    SYSTEM_PROMPT = SYSTEM_PROMPT_PATH
 
     def __init__(self, chat_input, exit=False):
         self.response = ""
@@ -24,6 +21,10 @@ class LlamaChat:
             model_path=MODEL_PATH,
             n_ctx=2048, verbose=False
         )
+    
+    def get_system_prompt(self):
+        with open(self.SYSTEM_PROMPT, 'r') as file:
+            return file.read()
     
     def update_context(self, prompt):
         with open(self.PROMPT_FILE, 'a') as file:
@@ -39,7 +40,7 @@ class LlamaChat:
         llm = self.get_model()
         _prompt = self.get_prompt()
         response = llm(
-            f"{self.BASE_PROMPT}\n{_prompt}\n{self.ASSISTANT_PREFIX}", 
+            f"{self.get_system_prompt()}\n{_prompt}\n{self.ASSISTANT_PREFIX}", 
             max_tokens=1000,
             stop=["###"]
         )
