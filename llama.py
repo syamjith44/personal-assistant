@@ -9,9 +9,10 @@ class LlamaChat:
     PROMPT_FILE = PROMPT_PATH
     SYSTEM_PROMPT = SYSTEM_PROMPT_PATH
 
-    def __init__(self, chat_input, exit=False):
+    def __init__(self, chat_input, exit=False, web_content=None):
         self.response = ""
         self.chat_input = chat_input
+        self.web_content = web_content
         self.prompt_llma()
         if exit is True:
             self.clear_context()
@@ -32,6 +33,8 @@ class LlamaChat:
     
     def get_prompt(self):
         prompt = f"{self.USER_PREFIX} {self.chat_input}"
+        if self.web_content:
+            prompt = f"\n### System: {self.web_content}\n{prompt}"
         self.update_context(prompt)
         with open(self.PROMPT_FILE, 'r') as file:
             return file.read()

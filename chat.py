@@ -8,8 +8,7 @@ import sys
 import os
 
 from llama import LlamaChat
-
-API_URL = "http://localhost:8000/chat/"
+from web_search.decision_agent import WebSearchDecisionAgent
 console = Console()
 terminal_width = console.size.width
 
@@ -53,8 +52,13 @@ while True:
             exit=True
         )
         break
+    web_content = None
+    web_decision_agent = WebSearchDecisionAgent(user_input)
+    if web_decision_agent.web_search_required:
+        styled_bot_msg("Searching web ...")
+        web_content = web_decision_agent.build_prompt_for_web_results()
     # try:
-    chat = LlamaChat(chat_input=user_input)
+    chat = LlamaChat(chat_input=user_input, web_content=web_content)
     # except:
     #     console.print("[red]Error communicating with model.[/red]")
     # else:
